@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Participant Verification</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 30px; background: #f4f4f4; text-align: center; }
+        .card { max-width: 500px; margin: 20px auto; padding: 30px; background: white; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        h1 { color: #333; }
+        button { padding: 15px 30px; font-size: 18px; background: #28a745; color: white; border: none; border-radius: 8px; cursor: pointer; margin-top: 20px; }
+        button:hover { background: #218838; }
+        .info p { font-size: 18px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>Event Check-in Verification</h1>
+    <div class="card" id="info">Loading details...</div>
+    <button onclick="markCheckedIn()">✅ Mark as Checked-In</button>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get('id');
+
+        // Sample data - we'll improve this later
+        const data = {
+            "PART-0001": {name: "Test Participant", email: "test@example.com", phone: "08012345678", org: "Example Organisation"}
+            // Add more participants here manually for now
+        };
+
+        const person = data[id] || {name: "Participant Not Found", email: "", phone: "", org: ""};
+
+        document.getElementById('info').innerHTML = `
+            <h2>${person.name}</h2>
+            <p><strong>Email:</strong> ${person.email}</p>
+            <p><strong>Phone:</strong> ${person.phone}</p>
+            <p><strong>Organisation:</strong> ${person.org}</p>
+            <p><strong>ID:</strong> ${id || 'Unknown'}</p>
+        `;
+
+        function markCheckedIn() {
+            alert("✅ Checked-In! (We can connect this to your Sheet later)");
+            // Future: Send update to Google Sheet
+        }
+    </script>
+</body>
+</html>
