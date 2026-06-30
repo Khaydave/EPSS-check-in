@@ -15,32 +15,31 @@
 </head>
 <body>
     <h1>Event Check-in Verification</h1>
-    <div class="card" id="info">Loading details...</div>
+    <div class="card" id="info">Loading participant details...</div>
     <button onclick="markCheckedIn()">✅ Mark as Checked-In</button>
 
     <script>
         const params = new URLSearchParams(window.location.search);
         const id = params.get('id');
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwhSuRmxJRQ0o8kPlxFCpTI7_IIB6ZHKsre-tVHdGlmAM5cLkZXxbeS1LA5tbam7Yeo/exec";
 
-        // Sample data - we'll improve this later
-        const data = {
-            "PART-0001": {name: "Test Participant", email: "test@example.com", phone: "08012345678", org: "Example Organisation"}
-            // Add more participants here manually for now
-        };
-
-        const person = data[id] || {name: "Participant Not Found", email: "", phone: "", org: ""};
-
-        document.getElementById('info').innerHTML = `
-            <h2>${person.name}</h2>
-            <p><strong>Email:</strong> ${person.email}</p>
-            <p><strong>Phone:</strong> ${person.phone}</p>
-            <p><strong>Organisation:</strong> ${person.org}</p>
-            <p><strong>ID:</strong> ${id || 'Unknown'}</p>
-        `;
+        fetch(WEB_APP_URL + "?id=" + encodeURIComponent(id))
+          .then(response => response.json())
+          .then(data => {
+            document.getElementById('info').innerHTML = `
+              <h2>${data.name || 'Not Found'}</h2>
+              <p><strong>Email:</strong> ${data.email || ''}</p>
+              <p><strong>Phone:</strong> ${data.phone || ''}</p>
+              <p><strong>Organisation:</strong> ${data.org || ''}</p>
+              <p><strong>ID:</strong> ${data.id || id}</p>
+            `;
+          })
+          .catch(err => {
+            document.getElementById('info').innerHTML = `<p>Error loading data. Please try again.</p>`;
+          });
 
         function markCheckedIn() {
-            alert("✅ Checked-In! (We can connect this to your Sheet later)");
-            // Future: Send update to Google Sheet
+          alert("✅ Participant marked as Checked-In! (We can make this update the Sheet automatically later)");
         }
     </script>
 </body>
