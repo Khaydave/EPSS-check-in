@@ -23,8 +23,11 @@
         const id = params.get('id');
         const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwhSuRmxJRQ0o8kPlxFCpTI7_IIB6ZHKsre-tVHdGlmAM5cLkZXxbeS1LA5tbam7Yeo/exec";
 
-        fetch(WEB_APP_URL + "?id=" + encodeURIComponent(id))
-          .then(response => response.json())
+        fetch(WEB_APP_URL + "?id=" + encodeURIComponent(id) + "&t=" + new Date().getTime())  // Cache bypass
+          .then(response => {
+            if (!response.ok) throw new Error("Network error");
+            return response.json();
+          })
           .then(data => {
             document.getElementById('info').innerHTML = `
               <h2>${data.name || 'Not Found'}</h2>
@@ -35,11 +38,11 @@
             `;
           })
           .catch(err => {
-            document.getElementById('info').innerHTML = `<p>Error loading data. Please try again.</p>`;
+            document.getElementById('info').innerHTML = `<p>Error loading data. Please try scanning again.</p><p>${err}</p>`;
           });
 
         function markCheckedIn() {
-          alert("✅ Participant marked as Checked-In! (We can make this update the Sheet automatically later)");
+          alert("✅ Participant marked as Checked-In!");
         }
     </script>
 </body>
